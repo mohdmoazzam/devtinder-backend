@@ -1,5 +1,6 @@
 const User = require("../models/user.model");
 const Request = require("../models/request.model");
+const { validatePaginationParams } = require("../utils/validation");
 
 const sendRequest = async (req, res) => {
     try {
@@ -112,6 +113,10 @@ const reviewRequest = async (req, res) => {
 
 const getReceivedRequests = async (req, res) => {
     try {
+        const result = validatePaginationParams(req);
+        if (!result.success) {
+            return res.status(400).json(result);
+        }
         const { limit, page, sortBy, order } = req.query;
         const skip = (Number(page) - 1) * Number(limit);
 
@@ -135,7 +140,7 @@ const getReceivedRequests = async (req, res) => {
 
         const response = receivedRequests.map((receivedRequest) => {
             return {
-                reqId: receivedRequest._id.toString(),
+                requestId: receivedRequest._id.toString(),
                 userId: receivedRequest.senderId._id.toString(),
                 firstName: receivedRequest.senderId.firstName,
                 lastName: receivedRequest.senderId.lastName,
@@ -155,6 +160,7 @@ const getReceivedRequests = async (req, res) => {
             },
         });
     } catch (err) {
+        console.log(err);
         return res.status(400).json({
             success: false,
             message: err.message,

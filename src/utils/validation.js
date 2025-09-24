@@ -54,8 +54,29 @@ const validateEditProfileData = (req) => {
     const {} = req.body;
 };
 
+const validatePaginationParams = (req) => {
+    let { limit, page, order } = req.query;
+
+    if (limit > 50) {
+        return { success: false, message: "Limit cannot be greater than 50" };
+    }
+
+    if (limit <= 0) {
+        return { success: false, message: "Limit must be greater than 0" };
+    }
+    if (page <= 0) {
+        return { success: false, message: "Page must be greater than 0" };
+    }
+    if (order && !["asc", "desc"].includes(order.toLowerCase())) {
+        return { success: false, message: `Invalid order value: ${order}. Must be asc or desc` };
+    }
+
+    return { success: true, message: "Validation passed" };
+};
+
 module.exports = {
     validateSignupData,
     validateLoginData,
     validateEditProfileData,
+    validatePaginationParams,
 };

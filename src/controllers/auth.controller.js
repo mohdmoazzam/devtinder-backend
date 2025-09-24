@@ -16,7 +16,7 @@ const signup = async (req, res) => {
             email: email,
         });
         if (emailExists) {
-            res.status(400).send({
+            return res.status(400).send({
                 success: false,
                 message: "An account with this email already exists.",
             });
@@ -33,12 +33,12 @@ const signup = async (req, res) => {
 
         user.save();
 
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             message: "Account created successfully.",
         });
     } catch (err) {
-        res.status(400).json({
+        return res.status(400).json({
             success: false,
             message: err.message || "Invalid request data",
         });
@@ -77,7 +77,7 @@ const login = async (req, res) => {
 
         return res.status(201).json({
             success: true,
-            message: "User logged in successfully",
+            data: user,
         });
     } catch (err) {
         return res.status(400).json({

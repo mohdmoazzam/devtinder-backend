@@ -12,7 +12,8 @@ const userAuth = async (req, res, next) => {
             });
         }
 
-        const decoded = await jwt.verify(accessToken, process.env.JWT_SECRET);
+        const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
+
         if (!decoded || !decoded._id) {
             return res.status(401).json({
                 success: false,
